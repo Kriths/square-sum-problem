@@ -19,9 +19,15 @@ def find_paths(graph, get_count):
     cycles = 0
     if len(graph) == 1:
         return 1
+    end_nodes = 0
     for node in graph:
-        if len(graph[node]) < 2:
+        if len(graph[node]) == 0: # Check for nodes without paths
             return 0
+        elif len(graph[node]) == 1: # Check for nodes with only 1 path
+            if end_nodes == 2: # Only 2 end nodes allowed max
+                return 0
+            else:
+                end_nodes += 1
     for startnode in graph:
         for endnode in graph:
             newpaths = find_all_paths(graph, startnode, endnode)
@@ -52,7 +58,7 @@ def generate_squares_up_to(max):
 def add_node(graph, node, squares):
     graph[node] = []
     check_node = 1
-    while check_node < node:
+    while check_node < node: # Check all existing nodes for connections
         if check_node+node in squares:
             graph[node].append(check_node)
             graph[check_node].append(node)
@@ -60,7 +66,7 @@ def add_node(graph, node, squares):
 
 
 def calculate_up_to(number, get_count):
-    squares = generate_squares_up_to(number * 2)
+    squares = generate_squares_up_to(number * 2) # Cache square numbers
     print(squares)
     graph = { }
     node = 1
