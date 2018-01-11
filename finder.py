@@ -15,21 +15,30 @@ def find_all_paths(graph, start, end, path=[]):
     return paths
 
 
-def find_paths(graph):
-    cycles = []
+def find_paths(graph, get_count):
+    cycles = 0
+    if len(graph) == 1:
+        return 1
+    for node in graph:
+        if len(graph[node]) < 2:
+            return 0
     for startnode in graph:
         for endnode in graph:
             newpaths = find_all_paths(graph, startnode, endnode)
             for path in newpaths:
                 if (len(path) == len(graph)):
-                    cycles.append(path)
+                    cycles += 1
+                    if not get_count:
+                        return 1
     return cycles
 
 
-def evaluate_current(graph):
-    a = find_paths(graph)
-    print(len(graph), ": Number of Hamiltonian Paths=", len(a))
-
+def evaluate_current(graph, get_count):
+    count = find_paths(graph, get_count)
+    if get_count:
+        print(len(graph), ": Number of Hamiltonian Paths=", count)
+    else:
+        print(len(graph), ": Hamiltonian Paths exist: ", count > 0)
 
 def generate_squares_up_to(max):
     set = []
@@ -50,7 +59,7 @@ def add_node(graph, node, squares):
         check_node += 1
 
 
-def calculate_up_to(number):
+def calculate_up_to(number, get_count):
     squares = generate_squares_up_to(number * 2)
     print(squares)
     graph = { }
@@ -58,9 +67,9 @@ def calculate_up_to(number):
     while node < number:
         add_node(graph, node, squares)
         print("Network for ", node, ": ", graph)
-        evaluate_current(graph)
+        evaluate_current(graph, get_count)
         node += 1
 
 
 if __name__ == "__main__":
-    calculate_up_to(300)
+    calculate_up_to(300, False)
